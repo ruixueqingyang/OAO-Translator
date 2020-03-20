@@ -1,0 +1,98 @@
+CLANG_INSTALL = /home/ghn/work/llvm-project/install
+CXX := $(CLANG_INSTALL)/bin/clang++
+LLVMCOMPONENTS := #cppbackend
+RTTIFLAG := -fno-rtti
+LLVMCONFIG := $(CLANG_INSTALL)/bin/llvm-config
+CXXFLAGS := -I$(shell $(LLVMCONFIG) --src-root)/tools/clang/include -I$(shell $(LLVMCONFIG) --obj-root)/tools/clang/include -I/usr/include $(shell $(LLVMCONFIG) --cxxflags) $(RTTIFLAG) -L/usr/lib/x86_64-linux-gnu
+LLVMLDFLAGS := $(shell $(LLVMCONFIG) --ldflags --libs $(LLVMCOMPONENTS))
+
+CLANGLIBS = \
+        -lclangTooling\
+        -lclangFrontendTool\
+        -lclangFrontend\
+        -lclangDriver\
+        -lclangSerialization\
+        -lclangCodeGen\
+        -lclangParse\
+        -lclangSema\
+        -lclangStaticAnalyzerFrontend\
+        -lclangStaticAnalyzerCheckers\
+        -lclangStaticAnalyzerCore\
+        -lclangAnalysis\
+        -lclangARCMigrate\
+        -lclangRewrite\
+        -lclangRewriteFrontend\
+        -lclangEdit\
+        -lclangAST\
+        -lclangLex\
+        -lclangBasic\
+        $(shell $(LLVMCONFIG) --libs)\
+        $(shell $(LLVMCONFIG) --system-libs)\
+        -lncurses
+
+
+#$(CXX) -o $@ $< $(CLANGLIBS) $(LLVMLDFLAGS)
+MY_LIB_PATH = LIBRARY_PATH=$(CLANG_INSTALL)/lib:${LIBRARY_PATH}
+
+MY_CLANG = $(CLANG_INSTALL)/bin/clang++
+
+MY_INCLUDE = -I$(CLANG_INSTALL)/include -I./
+
+
+# 正则表达式表示目录下所有.c文件, 相当于：SRCS = main.c a.c b.c
+# SRCS = $(wildcard *.c)
+SRCS = BaseFuns.cpp FuncInfo.cpp OAOSubFuncs.cpp OAORewriter.cpp OAO.cpp
+
+# OBJS表示SRCS中把列表中的.cpp全部替换为.o, 相当于：OBJS = main.o a.o b.o
+# OBJS = $(patsubst %c, %o, $(SRCS))
+OBJS = $(SRCS:.cpp = .o)    #OBJS将$(SRCS)下的.cpp文件转化为.o文件
+
+# 目标名称
+TARGET = OAO
+
+# .PHONE伪目标
+.PHONY: all clean run
+
+all: $(TARGET)
+
+
+# 第一行依赖关系：冒号后面为依赖的文件, 相当于Hello: main.o a.o b.o
+# 第二行规则：$@表示目标文件, $^表示所有依赖文件, $<表示第一个依赖文件
+$(TARGET) : $(OBJS)
+	$(CXX) $^ -o $@.bin $(CXXFLAGS) $(LLVMLDFLAGS) $(CLANGLIBS) $(MY_INCLUDE) -Wall -g -O0
+
+# 上一句目标文件依赖一大堆.o文件, 这句表示所有.o都由相应名字的.cpp文件自动生成
+%.o : %.cpp
+	$(CXX) -c $< $(CXXFLAGS) $(LLVMLDFLAGS) $(CLANGLIBS) $(MY_INCLUDE) -Wall -g -O0
+
+OAORewriter: OAORewriter.cpp
+	$(CXX) -c $< -o $@.o $(CXXFLAGS) $(LLVMLDFLAGS) $(CLANGLIBS) $(MY_INCLUDE)
+OAOMain: OAO.cpp
+	$(CXX) -c $< -o $@.o $(CXXFLAGS) $(LLVMLDFLAGS) $(CLANGLIBS) $(MY_INCLUDE)
+BIN: OAORewriter.o OAOMain.o
+	$(CXX) $^ -o $@.bin $(CXXFLAGS) $(LLVMLDFLAGS) $(CLANGLIBS) $(MY_INCLUDE)
+
+CIrewriter: CIrewriter.cpp
+	$(CXX) -o $@.bin $^ $(CXXFLAGS) $(LLVMLDFLAGS) $(CLANGLIBS)  $(MY_INCLUDE)
+#	$(MY_LIB_PATH) g++ -I $(MY_INCLUDE) -O3 -std=c++11 $< -o $@.bin
+
+clean:
+	rm -rf *.bin *.o
+	
+gdb:
+	gdb ./OAO.bin
+	
+# benchmarks
+# More examples in /OAO-Translator/benchmarks
+# polybench
+gemm:
+	./OAO.bin -fopenmp /home/wfr/work/Coding/chestnut/gemm.c > /home/wfr/work/Coding/chestnut/OAOOut.txt
+# Rodinia
+cfd:
+	./OAO.bin -fopenmp /home/wfr/work/Coding/Rodinia_3.1/openmp/cfd/euler3d_cpu.cpp > /home/wfr/work/Coding/Rodinia_3.1/openmp/cfd/OAOOut.txt
+
+
+# -DUSE_MPI=0 -v -g -O3 -fopenmp -I. -Wall -lm /home/wfr/work/LULESH/OneCpp/lulesh.cc
+# $@ 目标文件
+# $^ 所有的依赖文件
+# $< 第一个依赖文件
