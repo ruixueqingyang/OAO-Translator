@@ -1,0 +1,59 @@
+# polybench make translate
+
+Loc1 = /home/ghn/work/Polybench
+
+syrk:
+	./OAO.bin -fopenmp $(Loc1)/plain/SYRK/syrk_omp.c > $(Loc1)/plain/SYRK/OAOOut.txt
+syr2k:
+	./OAO.bin -fopenmp $(Loc1)/plain/SYR2K/syr2k_omp.c > $(Loc1)/plain/SYR2K/OAOOut.txt
+mvt:
+	./OAO.bin -fopenmp $(Loc1)/plain/MVT/mvt_omp.c > $(Loc1)/plain/MVT/OAOOut.txt
+gesummv:
+	./OAO.bin -fopenmp $(Loc1)/plain/GESUMMV/gesummv_omp.c > $(Loc1)/plain/GESUMMV/OAOOut.txt
+gemm:
+	./OAO.bin -fopenmp $(Loc1)/plain/GEMM/gemm_omp.c > $(Loc1)/plain/GEMM/OAOOut.txt
+covar:
+	./OAO.bin -fopenmp $(Loc1)/plain/COVAR/covariance_omp.c > $(Loc1)/plain/COVAR/OAOOut.txt
+corr:
+	./OAO.bin -fopenmp $(Loc1)/plain/CORR/correlation_omp.c > $(Loc1)/plain/CORR/OAOOut.txt
+bicg:
+	./OAO.bin -fopenmp $(Loc1)/plain/BICG/bicg_omp.c > $(Loc1)/plain/BICG/OAOOut.txt
+atax:
+	./OAO.bin -fopenmp $(Loc1)/plain/ATAX/atax_omp.c > $(Loc1)/plain/ATAX/OAOOut.txt
+fdtd2d:
+	./OAO.bin -fopenmp $(Loc1)/plain/FDTD-2D/fdtd2d_omp.c > $(Loc1)/plain/FDTD-2D/OAOOut.txt
+3MM:
+	./OAO.bin -fopenmp $(Loc1)/plain/3MM/3mm_omp.c > $(Loc1)/plain/3MM/OAOOut.txt
+3DCONV:
+	./OAO.bin -fopenmp $(Loc1)/plain/3DCONV/3dconv_omp.c > $(Loc1)/plain/3DCONV/OAOOut.txt
+2MM:
+	./OAO.bin -fopenmp $(Loc1)/plain/2MM/2mm_omp.c > $(Loc1)/plain/2MM/OAOOut.txt
+2DCONV:
+	./OAO.bin -fopenmp $(Loc1)/plain/2DCONV/2dconv_omp.c > $(Loc1)/plain/2DCONV/OAOOut.txt
+
+	
+# Rodinia make translate
+
+Loc2 = /home/ghn/work/par/Rodinia_3.1
+
+cfd:
+	./OAO.bin -fopenmp $(Loc2)/openmp/cfd/euler3d_cpu.cpp > $(Loc2)/openmp/cfd/OAOOut.txt
+pre_cfd:
+	./OAO.bin -fopenmp $(Loc2)/openmp/cfd/pre_euler3d_cpu.cpp > $(Loc2)/openmp/cfd/OAOOut_pre.txt
+bfs:
+	./OAO.bin -fopenmp $(Loc2)/openmp/cfd/euler3d_cpu.cpp > $(Loc2)/openmp/cfd/OAOOut.txt
+srad:
+	./OAO.bin -fopenmp $(Loc2)/openmp/cfd/euler3d_cpu.cpp > $(Loc2)/openmp/cfd/OAOOut.txt
+lud:
+	./OAO.bin -fopenmp $(Loc2)/openmp/lud/omp/lud_omp_one_file.c > $(Loc2)/openmp/lud/omp/OAOOut.txt
+lavaMD:
+	./OAO.bin -fopenmp $(Loc2)/openmp/lavaMD/OneFile.c > $(Loc2)/openmp/lavaMD/OAOOut.txt
+nw:
+	./OAO.bin -fopenmp $(Loc2)/openmp/nw/needle.cpp > $(Loc2)/openmp/nw/OAOOut.txt
+pf:
+	./OAO.bin -fopenmp $(Loc2)/openmp/particlefilter/ex_particle_OPENMP_seq.c > $(Loc2)/openmp/particlefilter/OAOOut.txt
+
+
+
+
+
