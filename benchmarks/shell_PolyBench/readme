@@ -4,4 +4,6 @@ use "shell_native"
 
 "shell_old_poly" is the old editon of shell , just as backup
 
+use "PolybenchAll.sh" can run all benchmarks test 
+
 Myfdtd2d_native.sh is useless
