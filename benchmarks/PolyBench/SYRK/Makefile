@@ -43,16 +43,6 @@ syrk: $(OBJECTS2.0)
 	@echo "Linking"
 	$(CXX) $(OBJECTS2.0) $(LDFLAGS) -o $@
 
-CFG: syrk.c
-	$(MY_LIB_PATH) $(MY_CLANG) -fopenmp -fno-color-diagnostics --analyze -Xanalyzer -analyzer-checker=debug.DumpCFG -std=c++11 $<  2> syrk_full.CFG # | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"
-VCFG: syrk.c
-	$(MY_LIB_PATH) $(MY_CLANG) -fopenmp -fno-color-diagnostics --analyze -Xanalyzer -analyzer-checker=debug.ViewCFG -std=c++11 $<
-AST1: syrk.c
-	$(MY_LIB_PATH) $(MY_CLANG) -cc1 -fopenmp -fsyntax-only -ast-dump $< #> syrk_full.ast
-AST: syrk.c
-	$(MY_LIB_PATH) $(MY_CLANG) -fopenmp -fsyntax-only -Xclang -ast-dump $< -fno-color-diagnostics > syrk_full.ast
-
-
 #cpu 单独
 syrk_exec3 = CPU
 
