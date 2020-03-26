@@ -28,7 +28,7 @@ You can compile OAO and run the tests by following these steps.
     
     Here are the key cmake parameters:  
     -DCUDA_HOST_COMPILER=gcc \  
-    -DLIBOMPTARGET_NVPTX_CUDA_COMPILER=clang++ \ # the clang compiled in step 4  
+    -DLIBOMPTARGET_NVPTX_CUDA_COMPILER=clang++ \ # the clang compiled in step 3  
     -DCLANG_OPENMP_NVPTX_DEFAULT_ARCH=sm_xx \ # compute capability of NVIDIA GPU  
     -DLIBOMPTARGET_NVPTX_COMPUTE_CAPABILITIES=xx \ # Compute Capability of NVIDIA GPU  
     -DLIBOMPTARGET_NVPTX_ENABLE_BCLIB=TRUE \  
