@@ -1,4 +1,4 @@
-CLANG_INSTALL = /home/ghn/work/llvm-project/install
+CLANG_INSTALL = /home/wfr/install/LLVM-9/install-9
 CXX := $(CLANG_INSTALL)/bin/clang++
 LLVMCOMPONENTS := #cppbackend
 RTTIFLAG := -fno-rtti
@@ -126,15 +126,6 @@ atax:
 	./OAO.bin -fopenmp /home/wfr/work/Polybench/atax.c > /home/wfr/work/Polybench/OAOOut.txt
 syr2k:
 	./OAO.bin -fopenmp /home/wfr/work/Polybench/syr2k.c > /home/wfr/work/Polybench/OAOOut.txt
-	
-2dconv:
-	./OAO.bin -fopenmp -I/home/ghn/gcc_builder_7.3/build/gcc/include -I//home/ghn/gcc_builder_7.3/build/prev-x86_64-linux-gnu/libgomp /home/ghn/桌面/plain-20200207/2DCONV/2DConvolution_omp.c > /home/ghn/桌面/plain-20200207/2DCONV/OAOOut.txt
-
-corr:
-	./OAO.bin -fopenmp -I/home/ghn/gcc_builder_7.3/build/gcc/include -I//home/ghn/gcc_builder_7.3/build/prev-x86_64-linux-gnu/libgomp /home/ghn/桌面/plain-20200207/CORR/correlation_omp.c > /home/ghn/桌面/plain-20200207/CORR/OAOOut.txt
-	
-demo:
-	./OAO.bin -fopenmp -I/home/ghn/gcc_builder_7.3/build/gcc/include -I//home/ghn/gcc_builder_7.3/build/prev-x86_64-linux-gnu/libgomp /home/ghn/桌面/demo/demo.c > /home/ghn/桌面/demo/OAOOut.txt
 
 # -DUSE_MPI=0 -v -g -O3 -fopenmp -I. -Wall -lm /home/wfr/work/LULESH/OneCpp/lulesh.cc
 # $@ 目标文件

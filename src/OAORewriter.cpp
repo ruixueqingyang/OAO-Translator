@@ -4863,25 +4863,6 @@ bool OAOASTVisitor::AnalyzeOneFunction(int indexFunc){
             
         } // while 循环 处理 一个不阻塞节点 / 一个阻塞
 
-        // ghn 20200309 已操作的静态变量存储，防止重复delete
-        std::vector<std::string> static_name; 
-        
-        // ghn 20200309 存储return的起始位置
-        // 如果静态变量作用域内存在return，则delete需要在return之前
-        std::vector<SourceLocation> return_begin; 
-        std::vector<SourceLocation> return_end; 
-        for(unsigned int i=0; i<vectorSEQ.size(); ++i){
-            SEQ_REGION& SEQ = vectorSEQ[i];
-            if(SEQ.indexVar!=indexVar || SEQ.isProcessed==false){
-                continue;
-            }
-            SourceLocation TmpLoc;
-            if( SEQ.ReturnRange.EndLoc!=TmpLoc ){
-                return_begin.emplace_back(SEQ.ReturnRange.BeginLoc);
-                return_end.emplace_back(SEQ.ReturnRange.EndLoc);
-            }
-        }
-        
         // 20190508 这里集中向 vectorTrans 中写入 同步操作
         // 先写 SEQ 节点的 vectorTrans
         for(unsigned int i=0; i<vectorSEQ.size(); ++i){
@@ -4930,140 +4911,12 @@ bool OAOASTVisitor::AnalyzeOneFunction(int indexFunc){
             // 只处理 数组/指针 且 在 device 中
             // 不处理函数参数
             // wfr 20190815 只有 不是全局变量 或者 是main函数 的情况, 才在 return 前释放 device 内存
-            
-            // ghn 20200308 静态变量单独处理
             if(vectorVar[indexVar].isGlobal==false || indexFunc==0){
                 SourceLocation TmpLoc;
                 if( SEQ.ReturnRange.EndLoc!=TmpLoc && isParm == false && SEQ.ExitStConstr!=StReqHostOnly && 
                     (vectorVar[indexVar].TypeName.back()=='*' || vectorVar[indexVar].TypeName.back()==']') )
                 {
-                    // ghn 20200308 静态变量单独处理
-                    bool static_p = false; //静态变量标志
-                    CODE_INSERT& InsertInfo = vectorVar[indexVar].vectorInsert[0];
-                    if(!InsertInfo.Code.empty() && InsertInfo.Code.size() >= 15){
-                        std::string Incode = InsertInfo.Code.substr(2,12);
-                        char *strc1 = new char[strlen(Incode.c_str())+1];
-                        strcpy(strc1, Incode.c_str());
-                        std::cout << "变量信息1 ： " << strc1 << std::endl;
-                        if(strcmp(strc1,"OAOArrayInfo") == 0){
-                            std::cout << "静态变量信息2 ： " << Incode << std::endl;
-                            static_p = true;
-                        }
-                    }
-                    if(static_p == false){
-                        SEQ.vectorTrans.emplace_back(indexVar, TRANS_TYPE::DATA_TRANS, StReqHostOnly, SEQ.ReturnRange.BeginLoc, Rewrite);
-                    }else{
-                        bool only_static = true; // 处理唯一标示
-//                         for(std::vector<std::string>::iterator iter = static_name.begin();iter != static_name.end();iter++){
-//                             std::string res = (std::string)(*iter);
-//                             char *strc1 = new char[strlen(res.c_str())+1];
-//                             strcpy(strc1, res.c_str());
-//                             char *strc2 = new char[strlen(vectorVar[indexVar].FullName.c_str())+1];
-//                             strcpy(strc2, vectorVar[indexVar].FullName.c_str());
-//                             if(strcmp(strc1,strc2) == 0){
-//                                 only_static = false;
-//                                 break;
-//                             }
-//                         }
-                        if(only_static == true){
-                            std::cout << "处理return：FullName = " << vectorVar[indexVar].FullName << std::endl;
-                            // ghn 20200309 插入OAODeleteArray
-                            SourceLocation DeleteInsertLoc;
-                            DeleteInsertLoc = SEQ.ReturnRange.BeginLoc;
-                            std::string ArrayDelete = "";
-                            ArrayDelete += "\n";
-                            ArrayDelete += OAO_ARRAY_DELETE;
-                            ArrayDelete += "( (void*)(";
-                            ArrayDelete += vectorVar[indexVar].FullName;
-                            ArrayDelete += ") );";
-                            ArrayDelete += "\n  ";
-
-                            std::vector<CODE_INSERT>::iterator iterCodeInsert;
-                            iterCodeInsert = find(vectorVar[indexVar].vectorInsert.begin(), vectorVar[indexVar].vectorInsert.end(), DeleteInsertLoc);
-                            if(iterCodeInsert==vectorVar[indexVar].vectorInsert.end()){ // 如果没找到该插入位置（在源代码中的位置）,  就新建该插入位置
-                                vectorVar[indexVar].vectorInsert.emplace_back(DeleteInsertLoc, "", Rewrite);
-                            iterCodeInsert = vectorVar[indexVar].vectorInsert.end()-1;
-                            }
-                            iterCodeInsert->Code += ArrayDelete;
-                        
-                            static_name.emplace_back(vectorVar[indexVar].FullName);
-                        }
-                    }
-                }
-                if( SEQ.ReturnRange.EndLoc==TmpLoc && isParm == false && SEQ.ExitStConstr!=StReqHostOnly && vectorVar[indexVar].TypeName.back()==']' )
-                {
-                    //ghn 20200308 静态变量单独处理
-                    bool static_p = false; //静态变量标志
-                    CODE_INSERT& InsertInfo = vectorVar[indexVar].vectorInsert[0];
-                    if(!InsertInfo.Code.empty() && InsertInfo.Code.size() >= 15){
-                        std::string Incode = InsertInfo.Code.substr(2,12);
-                        char *strc1 = new char[strlen(Incode.c_str())+1];
-                        strcpy(strc1, Incode.c_str());
-                        std::cout << "变量信息1 ： " << strc1 << std::endl;
-                        if(strcmp(strc1,"OAOArrayInfo") == 0){
-                            std::cout << "静态变量信息2 ： " << Incode << std::endl;
-                            static_p = true;
-                        }
-                            
-                    }
-                    // return标志
-                    bool return_s = false; 
-                    bool return_e = false; 
-                    for(std::vector<SourceLocation>::iterator iter = return_begin.begin();iter != return_begin.end();iter++){
-                        SourceLocation st = (SourceLocation)(*iter);
-                        if( vectorVar[indexVar].Scope.BeginLoc < st ){
-                            //std::cout << "1存在return ： " << std::endl;
-                            return_s = true;
-                        }
-                    }
-                    for(std::vector<SourceLocation>::iterator iter = return_end.begin();iter != return_end.end();iter++){
-                        SourceLocation ed = (SourceLocation)(*iter);
-                        if( vectorVar[indexVar].Scope.EndLoc > ed ){
-                            //std::cout << "2存在return ： " << std::endl;
-                            return_e = true;
-                        }
-                    }
-                    if(static_p == true && return_s == false && return_e == false){
-                        bool only_static = true; // 处理唯一标示
-                        for(std::vector<std::string>::iterator iter = static_name.begin();iter != static_name.end();iter++){
-                            std::string res = (std::string)(*iter);
-                            char *strc1 = new char[strlen(res.c_str())+1];
-                            strcpy(strc1, res.c_str());
-                            char *strc2 = new char[strlen(vectorVar[indexVar].FullName.c_str())+1];
-                            strcpy(strc2, vectorVar[indexVar].FullName.c_str());
-                            if(strcmp(strc1,strc2) == 0){
-                                only_static = false;
-                                break;
-                            }
-                        }
-                        // ghn 20200309 return 在当前变量的作用域存在returun 则在此处不处理
-                        
-                        if(only_static == true){
-                            std::cout << "无return：FullName = " << vectorVar[indexVar].FullName << std::endl;
-                            //ghn 20200309 插入OAODeleteArray
-                            SourceLocation DeleteInsertLoc;
-                            //ghn 20200309 静态变量作用域无return 则在作用域末尾插入OAODeleteArray
-                            DeleteInsertLoc = vectorVar[indexVar].Scope.EndLoc;
-                            std::string ArrayDelete = "";
-                            ArrayDelete += "\n";
-                            ArrayDelete += OAO_ARRAY_DELETE;
-                            ArrayDelete += "( (void*)(";
-                            ArrayDelete += vectorVar[indexVar].FullName;
-                            ArrayDelete += ") );";
-                            ArrayDelete += "\n";
-
-                            std::vector<CODE_INSERT>::iterator iterCodeInsert;
-                            iterCodeInsert = find(vectorVar[indexVar].vectorInsert.begin(), vectorVar[indexVar].vectorInsert.end(), DeleteInsertLoc);
-                            if(iterCodeInsert==vectorVar[indexVar].vectorInsert.end()){ // 如果没找到该插入位置（在源代码中的位置）,  就新建该插入位置
-                                vectorVar[indexVar].vectorInsert.emplace_back(DeleteInsertLoc, "", Rewrite);
-                            iterCodeInsert = vectorVar[indexVar].vectorInsert.end()-1;
-                            }
-                            iterCodeInsert->Code += ArrayDelete;
-                        
-                            static_name.emplace_back(vectorVar[indexVar].FullName);
-                        }
-                    }else{ }
-                    
+                    SEQ.vectorTrans.emplace_back(indexVar, TRANS_TYPE::DATA_TRANS, StReqHostOnly, SEQ.ReturnRange.BeginLoc, Rewrite);
                 }
             }
         }
@@ -5156,27 +5009,8 @@ bool OAOASTVisitor::AnalyzeOneFunction(int indexFunc){
             if( pScopeExitBase->ReturnRange.EndLoc==TmpLoc && isParm == false && pScopeExitBase->ExitStConstr!=StReqHostOnly &&
                 (vectorVar[indexRoot].TypeName.back()=='*' || vectorVar[indexRoot].TypeName.back()==']') )
             {
-                
-                // ghn 20200310 return标志,作用域存在return，则不处理
-                bool return_s = false; 
-                bool return_e = false; 
-                for(std::vector<SourceLocation>::iterator iter = return_begin.begin();iter != return_begin.end();iter++){
-                    SourceLocation st = (SourceLocation)(*iter);
-                    if( vectorVar[indexRoot].Scope.BeginLoc < st ){
-                        return_s = true;
-                    }
-                }
-                for(std::vector<SourceLocation>::iterator iter = return_end.begin();iter != return_end.end();iter++){
-                    SourceLocation ed = (SourceLocation)(*iter);
-                    if( vectorVar[indexRoot].Scope.EndLoc > ed ){
-                        return_e = true;
-                    }
-                }
-                if(pScopeExitBase->ExitState!=SYNC_STATE::HOST_ONLY && return_s == false && return_e == false){ // 如果不是 HOSY_ONLY, 就在作用域结束之前, 插入 delete 操作 
-                    // ghn 20200310 （本质上可以删除，因为是正确程序）
-                    
+                if(pScopeExitBase->ExitState!=SYNC_STATE::HOST_ONLY){ // 如果不是 HOSY_ONLY, 就在作用域结束之前, 插入 delete 操作
                     std::cout << "AnalyzeOneFunction: d" << std::endl;
-                    std::cout << "处理return：FullName = " << vectorVar[indexRoot].FullName << std::endl;
                     // 可以在这里将 变量 同步/传输操作信息 存入 函数中
                     pScopeExitBase->vectorTrans.emplace_back(indexRoot, TRANS_TYPE::DATA_TRANS, StReqHostOnly, vectorVar[indexRoot].Scope.EndLoc, Rewrite);
                 }else{

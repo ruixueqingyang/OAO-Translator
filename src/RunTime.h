@@ -27,7 +27,7 @@ History:  //修改历史记录列表, 每条修改记录应包含修改日期、
 #include <iostream>
 #include <assert.h>
 #include <malloc.h>
-//#include <cuda_runtime.h>
+#include <cuda_runtime.h>
 
 #define Bit0_0  (0)
 #define Bit0_1  (1)
@@ -135,9 +135,6 @@ void OAOFree(void* ptr);
 
 // 保存静态定义的数组的信息
 void OAOArrayInfo(void* ptr, unsigned long long int length, unsigned long long int ElementSize);
-
-// 删除静态定义的数组的信息
-void OAODeleteArray(void *ptr);
 
 // 进行数据传输, 并更新同步状态
 void OAODataTrans(void* ptr, STATE_CONSTR StReq);

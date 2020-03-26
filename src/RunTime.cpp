@@ -30,8 +30,6 @@ History:  //修改历史记录列表, 每条修改记录应包含修改日期、
 
 // #define _DEBUG_
 
-// #define _ARRAY_
-
 // wfr 20200104 使用这个标志来控制是否收集 传输 次数/数据量/时间
 // #define TRANS_METRICS
 
@@ -107,7 +105,7 @@ public:
 };
 
 std::vector<MEM_BLOCK> OAOMemEnv;
-// 衡量使用 malloc/cudaMallocHost 的阈值ghn 20200310
+// 衡量使用 malloc/cudaMallocHost 的阈值
 const unsigned long long int threshold = (unsigned long long int)128 * 1024;
 
 double expenseTime = 0.000000; //开销（除DataTrans以外的时间）
@@ -182,44 +180,6 @@ void OAODeleteInfo(void *ptr) {
     return;
 }
 
-// ghn 20200310 删除静态定义的数组的信息 
-void OAODeleteArray(void *ptr){
-#ifdef EXPENSES
-    gettimeofday(&timeStart, NULL);
-#endif
-    if (ptr == NULL) {
-        return;
-    }
-    int index = InWhinchMem(ptr);
-    if (index >= 0) {
-        OAOMemEnv.erase(OAOMemEnv.begin() + index);
-    }
-#ifdef _ARRAY_
-    //std::cout << "删除静态数组： " << std::dec << index << std::endl;
-    std::cout << "删除静态数组： " << std::dec << OAOMemEnv.size() << std::endl;
-#endif
-    
-    //合并静态数组的delete和datatrans
-    // 计算从 SyncState 到 StReq 所需的状态转移函数(状态确定为2,2)
-    unsigned int ZERO = ~((OAOMemEnv[index].SyncState ^ 2) & (~2));
-    unsigned int ONE = (OAOMemEnv[index].SyncState ^ 2) & 2;
-    STATE_CONSTR StTransFunc(ZERO, ONE);
-    char *BeginPtr = (char *)OAOMemEnv[index].Begin;
-    unsigned long long int Length = OAOMemEnv[index].Length;
-    //std::cout << "ZERO = " << std::dec << Length << std::endl;
-    //std::cout << "ONE = " << std::dec << Length << std::endl;
-#pragma omp target exit data map(delete : BeginPtr[:Length])
-    OAOMemEnv[index].ExeStTrans(StTransFunc);
-
-#ifdef EXPENSES
-    gettimeofday(&timeEnd, NULL);
-    tmpTime = (timeEnd.tv_sec - timeStart.tv_sec) + (double)(timeEnd.tv_usec - timeStart.tv_usec) / 1000000;
-    expenseTime += tmpTime;
-#endif
-    return;
-}
-
-
 // 保存静态定义的数组的信息
 void OAOArrayInfo(void *ptr, unsigned long long int length, unsigned long long int ElementSize) {
 #ifdef EXPENSES
@@ -232,12 +192,6 @@ void OAOArrayInfo(void *ptr, unsigned long long int length, unsigned long long i
     if (index < 0) {
         OAOMemEnv.emplace_back((unsigned long long int)ptr, length, ElementSize, 0);
     }
-#ifdef _ARRAY_
-//     std::cout << "保存静态数组： " << std::dec << (unsigned long long int)ptr << std::endl;
-//     std::cout << "保存静态数组： " << std::dec << length << std::endl;
-//     std::cout << "保存静态数组： " << std::dec << ElementSize << std::endl;
-    std::cout << "保存静态数组： " << std::dec << OAOMemEnv.size() << std::endl;
-#endif
 #ifdef EXPENSES
     gettimeofday(&timeEnd, NULL);
     tmpTime = (timeEnd.tv_sec - timeStart.tv_sec) + (double)(timeEnd.tv_usec - timeStart.tv_usec) / 1000000;
@@ -252,13 +206,13 @@ void *OAOMalloc(unsigned long long int length) {
     void *ptr = NULL;
     int MallocType = 0;
 
-//     if(length>=threshold){
-//         cudaMallocHost((void**)&ptr, length);
-//         MallocType = 2;
-//     }else{
+    if(length>=threshold){
+        cudaMallocHost((void**)&ptr, length);
+        MallocType = 2;
+    }else{
         ptr = malloc(length);
         MallocType = 1;
-//    }
+    }
 
 #ifdef EXPENSES
     gettimeofday(&timeStart, NULL);
@@ -294,7 +248,7 @@ void OAOFree(void *ptr) {
 #ifdef EXPENSES
     gettimeofday(&FreeTimeStart, NULL);
 #endif
-            //cudaFreeHost(ptr);
+            cudaFreeHost(ptr);
 #ifdef EXPENSES
     gettimeofday(&FreeTimeEnd, NULL);
 #endif

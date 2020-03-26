@@ -29,7 +29,6 @@ using namespace clang;
 #define OAO_NEW_NAME "OAONewInfo"
 #define OAO_DELETE_NAME "OAODeleteInfo"
 #define OAO_ARRAY_NAME "OAOArrayInfo"
-#define OAO_ARRAY_DELETE "OAODeleteArray"
 #define OAO_DATA_TRANS "OAODataTrans"
 #define OAO_ST_TRANS "OAOStTrans"
 
