@@ -42,11 +42,11 @@ You can compile OAO and run the tests by following these steps.
         Make a copy of RecursiveASTVisitor.h. (cp RecursiveASTVisitor.h RecursiveASTVisitorProtected.h)  
         Modify "private:" to "protected:" in RecursiveASTVisitorProtected.h. (Two places in total.)  
         
-    + LLVM_installation_path/lib/clang/9.0.1/include/__clang_cuda_math_forward_declares.h
+    + LLVM_installation_path/lib/clang/9.0.0/include/__clang_cuda_math_forward_declares.h
     
         Comment line 49 to 52
         
-    + LLVM_installation_path/lib/clang/9.0.1/include/__clang_cuda_cmath.h
+    + LLVM_installation_path/lib/clang/9.0.0/include/__clang_cuda_cmath.h
     
         Comment line 55 to 58
     
