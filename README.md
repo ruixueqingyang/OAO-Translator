@@ -38,9 +38,9 @@ You can compile OAO and run the tests by following these steps.
 
     + LLVM_installation_path/include/clang/AST/RecursiveASTVisitor.h
     
-        cd LLVM_installation_path/include/clang/AST/
-        Make a copy of RecursiveASTVisitor.h. (cp RecursiveASTVisitor.h RecursiveASTVisitorProtected.h)
-        Modify "private:" to "protected:" in RecursiveASTVisitorProtected.h. (Two places in total.)
+        cd LLVM_installation_path/include/clang/AST/  
+        Make a copy of RecursiveASTVisitor.h. (cp RecursiveASTVisitor.h RecursiveASTVisitorProtected.h)  
+        Modify "private:" to "protected:" in RecursiveASTVisitorProtected.h. (Two places in total.)  
         
     + LLVM_installation_path/lib/clang/9.0.1/include/__clang_cuda_math_forward_declares.h
     
@@ -62,7 +62,7 @@ You can compile OAO and run the tests by following these steps.
         OAO_installation_path/OAO.bin -fopenmp <compilation_parameters> source_file
 
 ### Simple demo  
-        cd OAO-Translator/benchmarks/demo && make translate_demo
+        cd OAO-Translator/benchmarks/demo && make translate_demo  
         make demo_offloading
 
 ### PolyBench and Rodinia
