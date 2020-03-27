@@ -2,13 +2,15 @@ INSTALL_PATH = ../../bin
 
 include ../path.mk # include CLANG_INSTALL CUDA_INC
 
-MY_CLANG = $(CLANG_INSTALL)/bin/clang++
+CFG: demo.c
+	$(MY_LIB_PATH) $(MY_CLANG) -fopenmp -fno-color-diagnostics --analyze -Xanalyzer -analyzer-checker=debug.DumpCFG -std=c++11 $<  2> demo_full.CFG # | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g"
+VCFG: demo.c
+	$(MY_LIB_PATH) $(MY_CLANG) -fopenmp -fno-color-diagnostics --analyze -Xanalyzer -analyzer-checker=debug.ViewCFG -std=c++11 $<
+AST1: demo.c
+	$(MY_LIB_PATH) $(MY_CLANG) -cc1 -fopenmp -fsyntax-only -ast-dump $< #> demo_full.ast
+AST: demo.c
+	$(MY_LIB_PATH) $(MY_CLANG) -fopenmp -fsyntax-only -Xclang -ast-dump $< -fno-color-diagnostics > demo_full.ast
 
-OFFLOADING_TARGET_FLAGS = -fopenmp -fopenmp-targets=nvptx64-nvidia-cuda -Xopenmp-target -march=sm_61
-
-OFFLOADING_LDFLAGS = -I$(CUDA_PATH)/include -L$(CUDA_PATH)/nvvm/libdevice -L$(CUDA_PATH)/lib64 -L$(CLANG_INSTALL)/lib -lcudart
-
-OFFLOADING_FLAGS = $(OFFLOADING_TARGET_FLAGS) $(OFFLOADING_LDFLAGS)
 
 translate_demo:
 	$(INSTALL_PATH)/OAO.bin -fopenmp ./demo.c > ./OAOOut.txt

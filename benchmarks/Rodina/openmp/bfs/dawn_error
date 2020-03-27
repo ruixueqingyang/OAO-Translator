@@ -1,0 +1,80 @@
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:60:3: error: must use 'struct' tag to refer to type 'Node'
+  Node *h_graph_nodes = (Node *)malloc(sizeof(Node) * no_of_nodes);
+  ^
+  struct
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:60:32: error: expected expression
+  Node *h_graph_nodes = (Node *)malloc(sizeof(Node) * no_of_nodes);
+                               ^
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:60:26: error: use of undeclared identifier 'Node'; did you mean 'modf'?
+  Node *h_graph_nodes = (Node *)malloc(sizeof(Node) * no_of_nodes);
+                         ^~~~
+                         modf
+/usr/include/x86_64-linux-gnu/bits/mathcalls.h:115:13: note: 'modf' declared here
+__MATHCALL (modf,, (_Mdouble_ __x, _Mdouble_ *__iptr)) __nonnull ((2));
+            ^
+/usr/include/math.h:53:25: note: expanded from macro '__MATHCALL'
+  __MATHDECL (_Mdouble_,function,suffix, args)
+                        ^
+/usr/include/math.h:55:22: note: expanded from macro '__MATHDECL'
+  __MATHDECL_1(type, function,suffix, args); \
+                     ^
+/usr/include/math.h:63:31: note: expanded from macro '__MATHDECL_1'
+  extern type __MATH_PRECNAME(function,suffix) args __THROW
+                              ^
+/usr/include/math.h:66:42: note: expanded from macro '__MATH_PRECNAME'
+#define __MATH_PRECNAME(name,r) __CONCAT(name,r)
+                                         ^
+/usr/include/x86_64-linux-gnu/sys/cdefs.h:88:23: note: expanded from macro '__CONCAT'
+#define __CONCAT(x,y)   x ## y
+                        ^
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:61:3: error: use of undeclared identifier 'bool'
+  bool *h_graph_mask = (bool *)malloc(sizeof(bool) * no_of_nodes);
+  ^
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:61:9: error: use of undeclared identifier 'h_graph_mask'
+  bool *h_graph_mask = (bool *)malloc(sizeof(bool) * no_of_nodes);
+        ^
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:61:31: error: expected expression
+  bool *h_graph_mask = (bool *)malloc(sizeof(bool) * no_of_nodes);
+                              ^
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:61:25: error: use of undeclared identifier 'bool'
+  bool *h_graph_mask = (bool *)malloc(sizeof(bool) * no_of_nodes);
+                        ^
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:62:3: error: use of undeclared identifier 'bool'
+  bool *h_updating_graph_mask = (bool *)malloc(sizeof(bool) * no_of_nodes);
+  ^
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:62:9: error: use of undeclared identifier 'h_updating_graph_mask'
+  bool *h_updating_graph_mask = (bool *)malloc(sizeof(bool) * no_of_nodes);
+        ^
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:62:40: error: expected expression
+  bool *h_updating_graph_mask = (bool *)malloc(sizeof(bool) * no_of_nodes);
+                                       ^
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:62:34: error: use of undeclared identifier 'bool'
+  bool *h_updating_graph_mask = (bool *)malloc(sizeof(bool) * no_of_nodes);
+                                 ^
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:63:3: error: use of undeclared identifier 'bool'
+  bool *h_graph_visited = (bool *)malloc(sizeof(bool) * no_of_nodes);
+  ^
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:63:9: error: use of undeclared identifier 'h_graph_visited'
+  bool *h_graph_visited = (bool *)malloc(sizeof(bool) * no_of_nodes);
+        ^
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:63:34: error: expected expression
+  bool *h_graph_visited = (bool *)malloc(sizeof(bool) * no_of_nodes);
+                                 ^
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:63:28: error: use of undeclared identifier 'bool'
+  bool *h_graph_visited = (bool *)malloc(sizeof(bool) * no_of_nodes);
+                           ^
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:71:5: error: use of undeclared identifier 'h_graph_mask'
+    h_graph_mask[i] = false;
+    ^
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:71:23: error: use of undeclared identifier 'false'
+    h_graph_mask[i] = false;
+                      ^
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:72:5: error: use of undeclared identifier 'h_updating_graph_mask'
+    h_updating_graph_mask[i] = false;
+    ^
+/tmp/dawn/5de641db66da6_1/5de641db66da6_1.c:72:32: error: use of undeclared identifier 'false'
+    h_updating_graph_mask[i] = false;
+                               ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+Scope info for file /tmp/dawn/5de641db66da6_1/5de641db66da6_1.c written successfully!
+20 errors generated..

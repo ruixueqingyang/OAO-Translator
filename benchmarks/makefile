@@ -6,7 +6,7 @@ polybench_all: syrk syr2k mvt gesummv gemm covar corr bicg atax fdtd2d 3mm 3dcon
 
 rodinia_al: cfd pre_cfd bfs srad lud lavaMD nw pf
 
-OAO_DIR = ../bin
+OAO_DIR = ../src
 
 # translate polybench
 
@@ -47,21 +47,22 @@ fdtd2d:
 RODINIA_DIR = ./Rodina
 
 cfd:
-	$(OAO_DIR)/OAO.bin -fopenmp $(RODINIA_DIR)/openmp/cfd/euler3d_cpu.cpp > $(RODINIA_DIR)/openmp/cfd/OAOOut.txt
+	$(OAO_DIR)/OAO.bin -fopenmp  $(RODINIA_DIR)/openmp/cfd/euler3d_cpu.cpp > $(RODINIA_DIR)/openmp/cfd/OAOOut.txt
 pre_cfd:
-	$(OAO_DIR)/OAO.bin -fopenmp $(RODINIA_DIR)/openmp/cfd/pre_euler3d_cpu.cpp > $(RODINIA_DIR)/openmp/cfd/OAOOut_pre.txt
+	$(OAO_DIR)/OAO.bin -fopenmp  $(RODINIA_DIR)/openmp/cfd/pre_euler3d_cpu.cpp > $(RODINIA_DIR)/openmp/cfd/OAOOut_pre.txt
 bfs:
-	$(OAO_DIR)/OAO.bin -fopenmp $(RODINIA_DIR)/openmp/cfd/euler3d_cpu.cpp > $(RODINIA_DIR)/openmp/cfd/OAOOut.txt
+	$(OAO_DIR)/OAO.bin -fopenmp  $(RODINIA_DIR)/openmp/bfs/bfs.cpp > $(RODINIA_DIR)/openmp/bfs/OAOOut.txt
 srad:
-	$(OAO_DIR)/OAO.bin -fopenmp $(RODINIA_DIR)/openmp/cfd/euler3d_cpu.cpp > $(RODINIA_DIR)/openmp/cfd/OAOOut.txt
+	$(OAO_DIR)/OAO.bin -fopenmp  $(RODINIA_DIR)/openmp/srad/srad_v2/srad.cpp > $(RODINIA_DIR)/openmp/srad/srad_v2/OAOOut.txt
 lud:
-	$(OAO_DIR)/OAO.bin -fopenmp $(RODINIA_DIR)/openmp/lud/omp/lud_omp_one_file.c > $(RODINIA_DIR)/openmp/lud/omp/OAOOut.txt
+	$(OAO_DIR)/OAO.bin -fopenmp  $(RODINIA_DIR)/openmp/lud/omp/lud_omp_one_file.c > $(RODINIA_DIR)/openmp/lud/omp/OAOOut.txt
 lavaMD:
-	$(OAO_DIR)/OAO.bin -fopenmp $(RODINIA_DIR)/openmp/lavaMD/OneFile.c > $(RODINIA_DIR)/openmp/lavaMD/OAOOut.txt
+	$(OAO_DIR)/OAO.bin -fopenmp  $(RODINIA_DIR)/openmp/lavaMD/OneFile.c > $(RODINIA_DIR)/openmp/lavaMD/OAOOut.txt
 nw:
-	$(OAO_DIR)/OAO.bin -fopenmp $(RODINIA_DIR)/openmp/nw/needle.cpp > $(RODINIA_DIR)/openmp/nw/OAOOut.txt
+	$(OAO_DIR)/OAO.bin -fopenmp  $(RODINIA_DIR)/openmp/nw/needle.cpp > $(RODINIA_DIR)/openmp/nw/OAOOut.txt
 pf:
-	$(OAO_DIR)/OAO.bin -fopenmp $(RODINIA_DIR)/openmp/particlefilter/ex_particle_OPENMP_seq.c > $(RODINIA_DIR)/openmp/particlefilter/OAOOut.txt
+	$(OAO_DIR)/OAO.bin -fopenmp  $(RODINIA_DIR)/openmp/particlefilter/ex_particle_OPENMP_seq.c > $(RODINIA_DIR)/openmp/particlefilter/OAOOut.txt
+
 
 
 

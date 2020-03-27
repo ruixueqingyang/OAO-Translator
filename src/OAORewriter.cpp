@@ -3539,7 +3539,7 @@ bool OAOASTVisitor::AnalyzeOMPNode(int indexOMP, FUNC_INFO& Func){
     // 使用递归函数遍历当前ForStmt的所有子孙节点
     // 目的是看是否存在多重循环,将所有OMP的ForStmt存入OMP节点内
     //if(forParall!=NULL){
-    if(isa<ForStmt>(forParall)){
+    if(forParall!=NULL && isa<ForStmt>(forParall)){
         DeepTraversal(forParall,OMPNode);
     }
     
