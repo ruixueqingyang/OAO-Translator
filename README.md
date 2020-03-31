@@ -60,7 +60,7 @@ You can compile OAO and run the tests by following these steps.
 ## How to run the tests
 ### OAO parameter format  
         OAO_installation_path/OAO.bin -fopenmp <compilation_parameters> source_file  
-Before using OAO, you should modify your source files according to the following notes.  
+**Before using OAO, you should modify your source files according to the following notes.**  
 **Notes:**  
 1. All source files should be merged into one unique source file. (The unique source file can include necessary head files.)  
 1. In the unique source file, functions should be defined at the same time as they are declared, except main() function.  
