@@ -59,7 +59,12 @@ You can compile OAO and run the tests by following these steps.
 
 ## How to run the tests
 ### OAO parameter format  
-        OAO_installation_path/OAO.bin -fopenmp <compilation_parameters> source_file
+        OAO_installation_path/OAO.bin -fopenmp <compilation_parameters> source_file  
+Before using OAO, you should modify your source files according to the following notes.  
+**Notes:**  
+1. All source files should be merged into one unique source file. (The unique source file can include necessary head files.)  
+1. In the unique source file, functions should be defined at the same time as they are declared, except main() function.  
+1. The main() function should be declared just after system or compiler head files and be defined at the end of the unique source file. The OAO treats the declaration of main() as a trigger to start the analysis. Code after the declaration of main() is translated.  
 
 ### Simple demo  
         cd OAO-Translator/benchmarks/demo && make translate_demo  
