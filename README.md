@@ -5,7 +5,7 @@ You can compile OAO and run the tests by following these steps.
 ## Installation of OAO
 ### Compiler Preparation
 1. Install GCC-8.3.0 and CUDA-10.1. (Higher version of CUDA is not supported by LLVM-9.0.0.)
-1. Download source code of LLVM-9.0.0 release. (Other versions may not be compatible with our code, because of defferent API.)
+1. Download source code of LLVM-9.0.0 release. (Other versions may not be compatible with our code, because of defferent APIs.)
 1. Compile LLVM for the first time
 
     You can refer to the documentation of LLVM.  
@@ -34,7 +34,7 @@ You can compile OAO and run the tests by following these steps.
     -DLIBOMPTARGET_NVPTX_ENABLE_BCLIB=TRUE \  
     -DCUDA_BUILD_CUBIN=ON \  
 
-1. Patch some source files in LLVM installation path. (You can copy the patches to the corresponding path.)
+1. Patch some header files in LLVM installation path. (You can copy the patches to the corresponding path.)
 
     + LLVM_installation_path/include/clang/AST/RecursiveASTVisitor.h
     
@@ -62,9 +62,9 @@ You can compile OAO and run the tests by following these steps.
         OAO_installation_path/OAO.bin -fopenmp <compilation_parameters> source_file  
 **Before using OAO, you should modify your source files according to the following notes.**  
 **Notes:**  
-1. All source files should be merged into one unique source file. (The unique source file can include necessary head files.)  
+1. All source files should be merged into one unique source file. (The unique source file can include necessary header files.)  
 1. In the unique source file, functions should be defined at the same time as they are declared, except main() function.  
-1. The main() function should be declared just after system or compiler head files and be defined at the end of the unique source file. The OAO treats the declaration of main() as a trigger to start the analysis. Code after the declaration of main() is translated.  
+1. The main() function should be declared just after system or compiler header files and before user header files. The main() function should be defined at the end of the unique source file. The OAO treats the declaration of main() as a trigger to start the analysis. Code after the declaration of main() is translated.  
 
 ### Simple demo  
         cd OAO-Translator/benchmarks/demo && make translate_demo  
@@ -74,5 +74,5 @@ You can compile OAO and run the tests by following these steps.
 1. Modify pathes in OAO-Translator/benchmarks/path.mk  
 1. Use OAO-Translator/benchmarks/makefile to translate benchmarks  
     cd OAO-Translator/benchmarks && make all # translate all benchmarks  
-    cd OAO-Translator/benchmarks && make gemm # translate benchmark GEMM  
+    cd OAO-Translator/benchmarks && make gemm # translate GEMM benchmark  
 1. Use .sh files in OAO-Translator/benchmarks/shell_PolyBench/ and OAO-Translator/benchmarks/shell_Rodinia/ to run benchmarks and get performance data.
