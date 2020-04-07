@@ -179,7 +179,7 @@ void GPU__correlation(DATA_TYPE *data, DATA_TYPE *mean, DATA_TYPE *stddev, DATA_
   int i, j, k;
 
 // Determine mean of column vectors of input data matrix
-#pragma #pragma omp target teams distribute parallel for 
+#pragma omp target teams distribute parallel for 
   for (j = 1; j < (M + 1); j++)
   {
     mean[j] = 0.0;
@@ -228,7 +228,7 @@ void GPU__correlation(DATA_TYPE *data, DATA_TYPE *mean, DATA_TYPE *stddev, DATA_
 OAODataTrans( data, StConstrTarget.init(7, 5) );
 OAODataTrans( symmat, StConstrTarget.init(7, 5) );
 
-#pragma #pragma omp target teams distribute parallel for  collapse(1)
+#pragma omp target teams distribute parallel for  collapse(1)
   for (k = 1; k < M; k++)
   {
     symmat[k * (M + 1) + k] = 1.0;
