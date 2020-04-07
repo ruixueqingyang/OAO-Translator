@@ -25,7 +25,7 @@ void GPU__correlation(DATA_TYPE *data, DATA_TYPE *mean, DATA_TYPE *stddev,int xx
 // Determine mean of column vectors of input data matrix
 OAODataTrans( cc, StConstrTarget.init(7, 5) );
 
-#pragma #pragma omp target teams distribute parallel for 
+#pragma omp target teams distribute parallel for 
   for (j = 0; j < N; j++)
   {
     mean[j] = xx[j] + cc[j];
