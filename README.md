@@ -76,3 +76,23 @@ You can compile OAO and run the tests by following these steps.
     cd OAO-Translator/benchmarks && make all # translate all benchmarks  
     cd OAO-Translator/benchmarks && make gemm # translate GEMM benchmark  
 1. Use .sh files in OAO-Translator/benchmarks/shell_PolyBench/ and OAO-Translator/benchmarks/shell_Rodinia/ to run benchmarks and get performance data.
+
+## Citation
+If you use GPOEO in your research, please cite us as follows:
+
+   Wang F, Zhang W, Guo H, et al. Automatic translation of data parallel programs for heterogeneous parallelism through OpenMP offloading[J]. The Journal of Supercomputing, 2021, 77: 4957-4987.
+   https://github.com/ruixueqingyang/OAO-Translator
+
+BibTex:
+
+```
+@article{wang2021automatic,
+  title={Automatic translation of data parallel programs for heterogeneous parallelism through OpenMP offloading},
+  author={Wang, Farui and Zhang, Weizhe and Guo, Haonan and Hao, Meng and Lu, Gangzhao and Wang, Zheng},
+  journal={The Journal of Supercomputing},
+  volume={77},
+  pages={4957--4987},
+  year={2021},
+  publisher={Springer}
+}
+```
